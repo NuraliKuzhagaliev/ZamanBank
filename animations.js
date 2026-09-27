@@ -23,10 +23,9 @@ export function initHeroAnimation() {
  * Animate cards on scroll
  */
 export function initCardAnimations() {
-  const cards = document.querySelectorAll('.card');
+  const cards = document.querySelectorAll('.card.scroll-reveal');
 
   cards.forEach((card, index) => {
-    card.classList.add('scroll-reveal');
     card.style.transitionDelay = `${index * 0.1}s`;
   });
 }
@@ -137,3 +136,4 @@ export default {
   fadeIn,
   slideUp
 };
+

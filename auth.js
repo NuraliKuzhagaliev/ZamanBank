@@ -3,8 +3,8 @@
  * Handles user authentication and session management
  */
 
-import * as api from 'api.js';
-import { showToast } from 'ui.js';
+import * as api from './api.js';
+import { showToast } from './ui.js';
 
 /**
  * Initialize auth module
@@ -56,8 +56,8 @@ export async function handleLogin(event) {
   event.preventDefault();
 
   const form = event.target;
-  const email = form.email.value;
-  const password = form.password.value;
+  const email = form.elements.email.value.trim();
+  const password = form.elements.password.value;
   const submitBtn = form.querySelector('button[type="submit"]');
 
   // Disable button during request
@@ -98,10 +98,10 @@ export async function handleRegister(event) {
   event.preventDefault();
 
   const form = event.target;
-  const name = form.name.value;
-  const email = form.email.value;
-  const password = form.password.value;
-  const confirmPassword = form.confirm_password.value;
+  const name = form.elements.name.value.trim();
+  const email = form.elements.email.value.trim();
+  const password = form.elements.password.value;
+  const confirmPassword = form.elements.confirm_password.value;
   const submitBtn = form.querySelector('button[type="submit"]');
 
   // Validate passwords match
@@ -119,6 +119,10 @@ export async function handleRegister(event) {
     // Store auth data
     localStorage.setItem('access_token', response.access_token);
     localStorage.setItem('user_id', response.user_id);
+
+    if (response.user) {
+      localStorage.setItem('user_data', JSON.stringify(response.user));
+    }
 
     showToast('Регистрация успешна!', 'success');
 
@@ -185,3 +189,4 @@ export default {
   handleRegister,
   logout
 };
+

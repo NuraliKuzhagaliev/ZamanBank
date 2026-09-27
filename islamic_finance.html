@@ -9,18 +9,20 @@
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <header class="site-header">
     <div class="container">
       <nav class="navbar">
-        <a href="index.html" class="navbar-brand">🏦 Zaman Bank</a>
+        <a href="index.html" class="navbar-brand"><span class="brand-mark">Z</span> zaman<span class="brand-dot">.</span></a>
         <ul class="navbar-nav">
           <li><a href="index.html" class="nav-link">Главная</a></li>
           <li><a href="about.html" class="nav-link">О нас</a></li>
-          <li><a href="services.html" class="nav-link">Услуги</a></li>
-          <li><a href="islamic_finance.html" class="nav-link active">Исламский банкинг</a></li>
-          <li><a href="ai_assistant.html" class="nav-link">AI Помощник</a></li>
+          <li><a href="services.html" class="nav-link">Возможности</a></li>
+          <li><a href="islamic_finance.html" class="nav-link active">Исламские финансы</a></li>
+          <li><a href="ai_assistant.html" class="nav-link">Помощник</a></li>
           <li><a href="contacts.html" class="nav-link">Контакты</a></li>
           <li data-guest-only><a href="login.html" class="btn btn-outline btn-sm">Войти</a></li>
         </ul>
@@ -31,10 +33,11 @@
 
   <section class="section">
     <div class="container container-narrow">
-      <h1 class="section-title">☪️ Исламский банкинг</h1>
+      <h1 class="section-title">Исламские финансы</h1>
       <p class="section-subtitle">
-        Финансовые услуги в соответствии с принципами шариата
+        Принципы, которыми вдохновляется концепт Zaman
       </p>
+      <p class="demo-note">Этот раздел носит ознакомительный характер. Zaman не предлагает финансовые продукты и не подтверждает соответствие конкретных продуктов требованиям шариата.</p>
 
       <div class="card fade-in">
         <h2>Что такое исламский банкинг?</h2>
@@ -46,7 +49,7 @@
       </div>
 
       <div class="card slide-up">
-        <h2>Наши исламские продукты</h2>
+        <h2>Какие модели мы изучаем</h2>
 
         <h3 style="margin-top: 1.5rem;">Мурабаха (Murabaha)</h3>
         <p>
@@ -76,7 +79,7 @@
       <div class="card slide-up">
         <h2>Преимущества исламского банкинга</h2>
         <ul style="padding-left: 1.5rem; line-height: 2;">
-          <li>✓ Полное соответствие принципам шариата</li>
+          <li>✓ Ориентация на принципы шариата</li>
           <li>✓ Прозрачность всех операций</li>
           <li>✓ Этичное инвестирование</li>
           <li>✓ Разделение рисков между банком и клиентом</li>
@@ -85,11 +88,11 @@
       </div>
 
       <div class="card slide-up" style="background: linear-gradient(135deg, var(--primary) 0%, var(--zaman-green) 100%); color: var(--white);">
-        <h2 style="color: var(--white);">Начните использовать исламский банкинг</h2>
+        <h2 style="color: var(--white);">Изучите концепт Zaman</h2>
         <p style="color: rgba(255, 255, 255, 0.9);">
-          Откройте исламский счет сегодня и управляйте финансами в соответствии с вашими убеждениями
+          Посмотрите, как может выглядеть цифровой сервис с вниманием к вашим ценностям.
         </p>
-        <a href="register.html" class="btn btn-secondary" style="margin-top: 1rem;">Открыть счет</a>
+        <a href="register.html" class="btn btn-secondary" style="margin-top: 1rem;">Открыть демо</a>
       </div>
     </div>
   </section>
@@ -103,9 +106,9 @@
   </footer>
 
   <script type="module">
-    import * as ui from 'ui.js';
-    import * as animations from 'animations.js';
-    import * as auth from 'auth.js';
+    import * as ui from './ui.js';
+    import * as animations from './animations.js';
+    import * as auth from './auth.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       ui.init();
@@ -115,3 +118,11 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+

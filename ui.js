@@ -14,7 +14,7 @@ export function showToast(message, type = 'info', duration = 3000) {
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
     <div class="flex-between gap-md">
-      <span>${message}</span>
+      <span>${escapeHtml(message)}</span>
       <button onclick="this.parentElement.parentElement.remove()" style="font-size: 1.2rem; color: inherit;">&times;</button>
     </div>
   `;
@@ -46,14 +46,14 @@ export function showConfirmModal(title, message, confirmText = 'Подтверд
     modal.innerHTML = `
       <div class="modal">
         <div class="modal-header">
-          <h3 class="modal-title">${title}</h3>
+          <h3 class="modal-title">${escapeHtml(title)}</h3>
         </div>
         <div class="modal-body">
-          <p>${message}</p>
+          <p>${escapeHtml(message)}</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" data-action="cancel">${cancelText}</button>
-          <button class="btn btn-primary" data-action="confirm">${confirmText}</button>
+          <button class="btn btn-ghost" data-action="cancel">${escapeHtml(cancelText)}</button>
+          <button class="btn btn-primary" data-action="confirm">${escapeHtml(confirmText)}</button>
         </div>
       </div>
     `;
@@ -164,6 +164,10 @@ export function formatDate(dateString) {
   }).format(date);
 }
 
+export function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+}
+
 /**
  * Initialize mobile menu toggle
  */
@@ -172,14 +176,25 @@ export function initMobileMenu() {
   const nav = document.querySelector('.navbar-nav');
 
   if (toggle && nav) {
+    toggle.setAttribute('aria-expanded', 'false');
+    if (!toggle.getAttribute('aria-label')) toggle.setAttribute('aria-label', 'Открыть меню');
     toggle.addEventListener('click', () => {
-      nav.classList.toggle('active');
+      const open = nav.classList.toggle('active');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
     });
 
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
       if (!toggle.contains(e.target) && !nav.contains(e.target)) {
         nav.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        nav.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
       }
     });
   }
@@ -189,6 +204,10 @@ export function initMobileMenu() {
  * Initialize scroll animations
  */
 export function initScrollAnimations() {
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('revealed'));
+    return;
+  }
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -200,6 +219,7 @@ export function initScrollAnimations() {
   });
 
   document.querySelectorAll('.scroll-reveal').forEach(el => {
+    el.classList.add('will-reveal');
     observer.observe(el);
   });
 }
@@ -245,3 +265,4 @@ export default {
   formatDate,
   init
 };
+

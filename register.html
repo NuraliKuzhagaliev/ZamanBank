@@ -9,13 +9,16 @@
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <div class="flex-center" style="min-height: 100vh; background: linear-gradient(135deg, var(--zaman-green) 0%, var(--primary) 100%); padding: 2rem;">
     <div class="card scale-in" style="max-width: 450px; width: 100%;">
       <div style="text-align: center; margin-bottom: 2rem;">
-        <h1 style="color: var(--primary); margin-bottom: 0.5rem;">🏦 Zaman Bank</h1>
-        <h2 style="font-size: var(--text-2xl);">Регистрация</h2>
+        <h1 style="color: var(--primary); margin-bottom: 0.5rem;">zaman<span class="brand-dot">.</span></h1>
+        <h2 style="font-size: var(--text-2xl);">Демо профиль</h2>
+        <p class="demo-note">Профиль хранится только в этом браузере. Используйте вымышленные данные и не вводите настоящий пароль.</p>
       </div>
 
       <form id="register-form">
@@ -51,6 +54,7 @@
             name="password" 
             class="form-input" 
             placeholder="••••••••"
+            minlength="6"
             required
           >
         </div>
@@ -63,6 +67,7 @@
             name="confirm_password" 
             class="form-input" 
             placeholder="••••••••"
+            minlength="6"
             required
           >
         </div>
@@ -87,18 +92,18 @@
   </div>
 
   <script type="module">
-    import * as auth from '../js/auth.js';
-    import * as validator from '../js/validator.js';
+    import * as auth from './auth.js';
+    import * as validator from './validator.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('register-form');
       form.addEventListener('submit', auth.handleRegister);
 
       // Real-time validation
-      const nameInput = form.name;
-      const emailInput = form.email;
-      const passwordInput = form.password;
-      const confirmPasswordInput = form.confirm_password;
+      const nameInput = form.elements.name;
+      const emailInput = form.elements.email;
+      const passwordInput = form.elements.password;
+      const confirmPasswordInput = form.elements.confirm_password;
 
       nameInput.addEventListener('blur', () => {
         const result = validator.validateRequired(nameInput.value, 'Имя');
@@ -138,3 +143,7 @@
   </script>
 </body>
 </html>
+
+
+
+

@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 - Страница не найдена</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <div class="flex-center" style="min-height: 100vh; background: linear-gradient(135deg, var(--zaman-green) 0%, var(--primary) 100%); padding: 2rem;">
@@ -22,13 +24,13 @@
 
       <div class="flex-center gap-md" style="flex-wrap: wrap;">
         <a href="index.html" class="btn btn-primary">На главную</a>
-        <a href="javascript:history.back()" class="btn btn-outline">Назад</a>
+        <button type="button" onclick="history.back()" class="btn btn-outline">Назад</button>
       </div>
     </div>
   </div>
 
   <script type="module">
-    import * as animations from '../js/animations.js';
+    import * as animations from './animations.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       animations.initPageTransition();
@@ -36,3 +38,6 @@
   </script>
 </body>
 </html>
+
+
+

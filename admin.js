@@ -3,8 +3,8 @@
  * Handles admin panel functionality and AI action logs
  */
 
-import * as api from 'api.js';
-import * as ui from 'ui.js';
+import * as api from './api.js';
+import * as ui from './ui.js';
 
 let logsData = [];
 let currentFilters = {};
@@ -162,16 +162,16 @@ async function handleFilterSubmit(event) {
   const form = event.target;
   const filters = {};
 
-  if (form.user_id.value) {
-    filters.user_id = form.user_id.value;
+  if (form.elements.user_id.value) {
+    filters.user_id = form.elements.user_id.value;
   }
 
-  if (form.action_type.value) {
-    filters.action_type = form.action_type.value;
+  if (form.elements.action_type.value) {
+    filters.action_type = form.elements.action_type.value;
   }
 
-  if (form.status.value) {
-    filters.status = form.status.value;
+  if (form.elements.status.value) {
+    filters.status = form.elements.status.value;
   }
 
   currentFilters = filters;
@@ -247,3 +247,4 @@ export default {
   filterLogs,
   viewLogDetails
 };
+

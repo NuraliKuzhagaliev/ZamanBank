@@ -1,0 +1,10 @@
+{
+  "name": "zaman-hackathon-concept",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Standalone interactive fintech concept",
+  "scripts": {
+    "dev": "node server.cjs",
+    "check": "node checks.cjs"
+  }
+}

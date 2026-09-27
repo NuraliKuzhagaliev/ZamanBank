@@ -94,6 +94,10 @@ export function validateDate(dateString) {
     return { ok: false, message: 'Неверный формат даты' };
   }
 
+  if (dateString < new Date().toISOString().slice(0, 10)) {
+    return { ok: false, message: 'Выберите будущую дату' };
+  }
+
   return { ok: true, message: '' };
 }
 
@@ -169,3 +173,4 @@ export default {
   clearError,
   validateForm
 };
+

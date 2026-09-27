@@ -3,10 +3,10 @@
  * Handles dashboard data display and interactions
  */
 
-import * as api from 'api.js';
-import * as auth from 'auth.js';
-import * as ui from 'ui.js';
-import * as validator from 'validator.js';
+import * as api from './api.js';
+import * as auth from './auth.js';
+import * as ui from './ui.js';
+import * as validator from './validator.js';
 
 let goalsData = [];
 let transactionsData = [];
@@ -21,10 +21,9 @@ export async function init() {
   window.addEventListener('dashboard-refresh', loadDashboard);
 
   // Setup create goal form
-  const createGoalForm = document.getElementById('create-goal-form');
-  if (createGoalForm) {
-    createGoalForm.addEventListener('submit', handleCreateGoal);
-  }
+  document.addEventListener('submit', event => {
+    if (event.target.id === 'create-goal-form') handleCreateGoal(event);
+  });
 }
 
 /**
@@ -95,14 +94,14 @@ async function loadGoals(userId) {
  * @returns {string}
  */
 function renderGoalCard(goal) {
-  const progress = Math.min(Math.round((goal.current_amount / goal.target_amount) * 100), 100);
+  const progress = Math.min(Math.max(Math.round((goal.current_amount / goal.target_amount) * 100), 0), 100);
   const daysLeft = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
 
   return `
     <div class="card hover-lift">
       <div class="card-header">
-        <h3 class="card-title">${goal.title}</h3>
-        <span class="badge badge-primary">${daysLeft} дней</span>
+        <h3 class="card-title">${ui.escapeHtml(goal.title)}</h3>
+        <span class="badge badge-primary">${daysLeft < 0 ? 'Срок прошёл' : `${daysLeft} дн.`}</span>
       </div>
       <div class="card-body">
         <div class="flex-between" style="margin-bottom: 0.5rem;">
@@ -156,9 +155,9 @@ async function loadTransactions(userId) {
           ${transactionsData.map(t => `
             <tr>
               <td>${ui.formatDate(t.date)}</td>
-              <td>${t.description}</td>
+              <td>${ui.escapeHtml(t.description)}</td>
               <td style="color: ${t.type === 'credit' ? 'var(--success)' : 'var(--error)'}; font-weight: 600;">
-                ${t.type === 'credit' ? '+' : ''}${ui.formatCurrency(t.amount)}
+                ${t.type === 'credit' ? '+' : '−'}${ui.formatCurrency(Math.abs(t.amount))}
               </td>
               <td>
                 <span class="badge ${t.type === 'credit' ? 'badge-success' : 'badge-warning'}">
@@ -183,7 +182,7 @@ function updateBalance() {
   const user = auth.getCurrentUser();
   const balanceEl = document.getElementById('balance-amount');
 
-  if (balanceEl && user && user.balance) {
+  if (balanceEl && user && Number.isFinite(user.balance)) {
     balanceEl.textContent = ui.formatCurrency(user.balance);
   }
 }
@@ -196,9 +195,9 @@ async function handleCreateGoal(event) {
   event.preventDefault();
 
   const form = event.target;
-  const title = form.goal_title.value;
-  const targetAmount = parseFloat(form.target_amount.value);
-  const deadline = form.deadline.value;
+  const title = form.elements.goal_title.value.trim();
+  const targetAmount = parseFloat(form.elements.target_amount.value);
+  const deadline = form.elements.deadline.value;
 
   // Validate
   const isValid = validator.validateForm(form, {
@@ -254,3 +253,4 @@ export default {
   init,
   refresh
 };
+

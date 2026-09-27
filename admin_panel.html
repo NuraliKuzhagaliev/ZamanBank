@@ -9,15 +9,17 @@
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <header class="site-header">
     <div class="container">
       <nav class="navbar">
-        <a href="index.html" class="navbar-brand">🏦 Zaman Bank Admin</a>
+        <a href="index.html" class="navbar-brand"><span class="brand-mark">Z</span> zaman<span class="brand-dot">.</span> / журнал</a>
         <ul class="navbar-nav">
           <li><a href="dashboard.html" class="nav-link">Кабинет</a></li>
-          <li><a href="admin_panel.html" class="nav-link active">Админ панель</a></li>
+          <li><a href="admin_panel.html" class="nav-link active">Демо журнал</a></li>
           <li><a href="#" class="nav-link" id="logout-btn">Выйти</a></li>
         </ul>
         <button class="nav-toggle">☰</button>
@@ -26,6 +28,7 @@
   </header>
 
   <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <p class="demo-note">Демо журнал с вымышленными записями. Эта страница не является защищённой панелью администратора.</p>
     <h1 style="margin-bottom: 2rem;">Панель администратора</h1>
 
     <!-- Filters -->
@@ -79,9 +82,9 @@
   </div>
 
   <script type="module">
-    import * as admin from 'admin.js';
-    import * as auth from 'auth.js';
-    import * as ui from 'ui.js';
+    import * as admin from './admin.js';
+    import * as auth from './auth.js';
+    import * as ui from './ui.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.init();
@@ -97,3 +100,8 @@
   </script>
 </body>
 </html>
+
+
+
+
+

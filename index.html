@@ -1,183 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Zaman Bank - Современный банкинг с AI-помощником">
-  <title>Zaman Bank - Главная</title>
-
-  <!-- Google Fonts -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zaman — интерактивный концепт финансового кабинета с целями и цифровым помощником.">
+  <title>Zaman — финансы в вашем ритме</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container">
-      <nav class="navbar">
-        <a href="index.html" class="navbar-brand">
-          🏦 Zaman Bank
-        </a>
-
-        <ul class="navbar-nav">
-          <li><a href="index.html" class="nav-link active">Главная</a></li>
-          <li><a href="about.html" class="nav-link">О нас</a></li>
-          <li><a href="services.html" class="nav-link">Услуги</a></li>
-          <li><a href="islamic_finance.html" class="nav-link">Исламский банкинг</a></li>
-          <li><a href="ai_assistant.html" class="nav-link">AI Помощник</a></li>
-          <li><a href="contacts.html" class="nav-link">Контакты</a></li>
-          <li data-guest-only><a href="login.html" class="btn btn-outline btn-sm">Войти</a></li>
-          <li data-auth-required style="display: none;"><a href="dashboard.html" class="btn btn-primary btn-sm">Личный кабинет</a></li>
-        </ul>
-
-        <button class="nav-toggle">☰</button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="hero-title">Будущее банкинга с AI</h1>
-        <p class="hero-subtitle">
-          Управляйте финансами с помощью искусственного интеллекта. 
-          Персонализированные советы, голосовое управление и исламские финансы в одном месте.
-        </p>
-        <div class="flex gap-md" style="flex-wrap: wrap;">
-          <a href="register.html" class="btn btn-secondary btn-lg">Открыть счет</a>
-          <a href="ai_assistant.html" class="btn btn-outline btn-lg" style="color: white; border-color: white;">Попробовать AI</a>
+  <header class="site-header"><div class="container">
+    <nav class="navbar" aria-label="Основная навигация">
+      <a class="navbar-brand" href="index.html"><span class="brand-mark">Z</span> zaman<span class="brand-dot">.</span></a>
+      <ul class="navbar-nav" id="main-nav">
+        <li><a class="nav-link active" href="index.html" aria-current="page">Главная</a></li>
+        <li><a class="nav-link" href="services.html">Возможности</a></li>
+        <li><a class="nav-link" href="islamic_finance.html">Исламские финансы</a></li>
+        <li><a class="nav-link" href="ai_assistant.html">Помощник</a></li>
+        <li data-guest-only><a class="btn btn-primary btn-sm" href="login.html">Открыть демо <span aria-hidden="true">↗</span></a></li>
+        <li data-auth-required style="display:none"><a class="btn btn-primary btn-sm" href="dashboard.html">Мой кабинет <span aria-hidden="true">↗</span></a></li>
+      </ul>
+      <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="main-nav">☰</button>
+    </nav>
+  </div></header>
+  <main>
+    <section class="hero hero-home">
+      <div class="hero-orb hero-orb-one"></div><div class="hero-orb hero-orb-two"></div>
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> Интерактивный концепт • Hackathon project</span>
+          <h1 class="hero-title">Ваши деньги.<br><em>Ваши правила.</em><br>Ваш Zaman.</h1>
+          <p class="hero-subtitle">Финансовые цели, понятная картина расходов и помощник в одном спокойном пространстве. Попробуйте, как может выглядеть банкинг нового времени.</p>
+          <div class="hero-actions"><a href="login.html" class="btn btn-secondary btn-lg">Попробовать демо <span aria-hidden="true">↗</span></a><a href="#how-it-works" class="hero-text-link">Как это работает <span aria-hidden="true">↓</span></a></div>
+          <p class="hero-note">Без реального счёта и операций • Данные демо хранятся в вашем браузере</p>
+        </div>
+        <div class="hero-visual" aria-label="Пример интерфейса финансового кабинета">
+          <div class="preview-window">
+            <div class="preview-top"><span class="preview-logo">zaman<span>.</span></span><span class="preview-pill">Личный обзор</span></div>
+            <div class="preview-greeting">Добрый день 👋</div>
+            <div class="preview-balance"><span>Ваш баланс <span class="preview-eye">◉</span></span><strong>250 000 ₸</strong><small>Демонстрационный счёт</small></div>
+            <div class="preview-split"><div><span class="preview-icon">↗</span><strong>Доходы</strong><small>+150 000 ₸</small></div><div><span class="preview-icon">↘</span><strong>Расходы</strong><small>−48 500 ₸</small></div></div>
+            <div class="preview-goal"><div><span>Моя цель</span><strong>Путешествие ✈</strong></div><span>25%</span></div><div class="preview-progress"><span></span></div>
+          </div>
+          <div class="floating-card floating-card-one"><span class="floating-icon">✦</span><div><strong>Меньше рутины</strong><small>Больше ясности</small></div></div>
+          <div class="floating-card floating-card-two"><span class="floating-icon lime">↗</span><div><strong>Цель ближе</strong><small>Шаг за шагом</small></div></div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section class="section">
-    <div class="container">
-      <h2 class="section-title">Наши преимущества</h2>
-      <p class="section-subtitle">
-        Современные технологии для удобного управления вашими финансами
-      </p>
-
-      <div class="grid grid-3">
-        <div class="card scroll-reveal">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
-          <h3 class="card-title">AI-Помощник</h3>
-          <p>Интеллектуальный помощник с голосовым управлением для управления финансами</p>
-        </div>
-
-        <div class="card scroll-reveal">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">☪️</div>
-          <h3 class="card-title">Исламский банкинг</h3>
-          <p>Финансовые услуги в соответствии с принципами шариата</p>
-        </div>
-
-        <div class="card scroll-reveal">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
-          <h3 class="card-title">Безопасность</h3>
-          <p>Надежная защита ваших данных и средств</p>
-        </div>
-
-        <div class="card scroll-reveal">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
-          <h3 class="card-title">Аналитика</h3>
-          <p>Детальная статистика расходов и доходов</p>
-        </div>
-
-        <div class="card scroll-reveal">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-          <h3 class="card-title">Финансовые цели</h3>
-          <p>Планируйте и достигайте финансовые цели с AI</p>
-        </div>
-
-        <div class="card scroll-reveal">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
-          <h3 class="card-title">Мгновенные переводы</h3>
-          <p>Быстрые и безопасные транзакции 24/7</p>
-        </div>
+    </section>
+    <section class="trust-strip" aria-label="Особенности демо"><div class="container trust-grid"><span>01 <strong>Понятные цели</strong></span><span>02 <strong>Обзор финансов</strong></span><span>03 <strong>Умный помощник</strong></span><span>04 <strong>Уважение к ценностям</strong></span></div></section>
+    <section class="section features-section" id="how-it-works"><div class="container">
+      <div class="section-heading"><div><span class="section-kicker">ВСЁ НА СВОИХ МЕСТАХ</span><h2>Финансы без<br><span>лишнего шума.</span></h2></div><p>Вместо сложных экранов — инструменты, которые помогают видеть главное и двигаться к тому, что важно.</p></div>
+      <div class="feature-grid">
+        <a class="feature-card feature-card-dark" href="dashboard.html"><span class="feature-number">01 / КАБИНЕТ</span><div class="feature-symbol">◎</div><h3>Общая картина<br>за секунду</h3><p>Баланс, история операций и прогресс целей в одном месте.</p><span class="feature-arrow" aria-hidden="true">↗</span></a>
+        <a class="feature-card feature-card-lime" href="ai_assistant.html"><span class="feature-number">02 / ПОМОЩНИК</span><div class="feature-symbol">✳</div><h3>Вопросы о деньгах?<br>Просто спросите</h3><p>Прототип помощника подскажет, где посмотреть баланс и как начать копить.</p><span class="feature-arrow" aria-hidden="true">↗</span></a>
+        <a class="feature-card feature-card-light" href="islamic_finance.html"><span class="feature-number">03 / ЦЕННОСТИ</span><div class="feature-symbol">◈</div><h3>Финансы с опорой<br>на принципы</h3><p>Концепция уважительного подхода к исламским финансовым ценностям.</p><span class="feature-arrow" aria-hidden="true">↗</span></a>
       </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="section" style="background-color: var(--surface);">
-    <div class="container">
-      <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-        <h2 style="margin-bottom: 1rem;">Начните сегодня</h2>
-        <p style="margin-bottom: 2rem; color: var(--text-secondary);">
-          Присоединяйтесь к тысячам пользователей, которые доверяют Zaman Bank
-        </p>
-        <a href="register.html" class="btn btn-primary btn-lg">Открыть счет бесплатно</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>Zaman Bank</h4>
-          <p>Современный банкинг с искусственным интеллектом</p>
-        </div>
-
-        <div class="footer-section">
-          <h4>Услуги</h4>
-          <ul>
-            <li><a href="services.html">Счета и карты</a></li>
-            <li><a href="services.html">Кредиты</a></li>
-            <li><a href="islamic_finance.html">Исламский банкинг</a></li>
-            <li><a href="ai_assistant.html">AI Помощник</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Компания</h4>
-          <ul>
-            <li><a href="about.html">О нас</a></li>
-            <li><a href="contacts.html">Контакты</a></li>
-            <li><a href="#">Карьера</a></li>
-            <li><a href="#">Пресс-центр</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Поддержка</h4>
-          <ul>
-            <li><a href="#">Помощь</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Безопасность</a></li>
-            <li><a href="contacts.html">Связаться с нами</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; 2025 Zaman Bank. Все права защищены.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script type="module">
-    import * as ui from 'ui.js';
-    import * as animations from 'animations.js';
-    import * as auth from 'auth.js';
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      ui.init();
-      animations.init();
-      auth.init();
-    });
-  </script>
+    </div></section>
+    <section class="section journey-section"><div class="container journey-grid"><div><span class="section-kicker">НАЧНИТЕ С ГЛАВНОГО</span><h2>Большие планы<br>начинаются с<br><span>маленького шага.</span></h2><p>Создайте цель в демо кабинете, задайте сумму и срок. Прогресс останется в вашем браузере, чтобы к нему можно было вернуться.</p><a class="btn btn-primary btn-lg" href="register.html">Создать демо профиль <span aria-hidden="true">↗</span></a></div><div class="journey-card"><div class="journey-card-top"><span>Финансовая цель</span><span>✦</span></div><div class="journey-icon">✈</div><h3>Навстречу мечте</h3><p>Каждое большое путешествие начинается с первого шага.</p><div class="journey-metric"><span>75 000 ₸ собрано</span><strong>75%</strong></div><div class="journey-bar"><span></span></div><small>Ваш план. Ваш темп.</small></div></div></section>
+    <section class="final-cta"><div class="container final-cta-inner"><div><span class="section-kicker">ГОТОВЫ ЗАГЛЯНУТЬ В БУДУЩЕЕ?</span><h2>Давайте знакомиться<br>с Zaman<span>.</span></h2></div><a class="btn btn-secondary btn-lg" href="login.html">Открыть демо <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer class="site-footer"><div class="container"><div class="footer-main"><div><a class="footer-brand" href="index.html">zaman<span>.</span></a><p>Концепт цифрового финансового сервиса.<br>Создан для демонстрации на хакатоне.</p></div><div class="footer-links"><a href="about.html">О проекте</a><a href="services.html">Возможности</a><a href="ai_assistant.html">Помощник</a><a href="contacts.html">Обратная связь</a></div></div><div class="footer-bottom"><span>© 2025 Zaman. Демонстрационный проект.</span><span>Сделано с вниманием к будущему.</span></div></div></footer>
+  <script type="module">import * as ui from './ui.js'; import * as auth from './auth.js'; ui.init(); auth.init();</script>
 </body>
 </html>
+
+

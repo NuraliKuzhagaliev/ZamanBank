@@ -9,15 +9,17 @@
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <header class="site-header">
     <div class="container">
       <nav class="navbar">
-        <a href="index.html" class="navbar-brand">🏦 Zaman Bank</a>
+        <a href="index.html" class="navbar-brand"><span class="brand-mark">Z</span> zaman<span class="brand-dot">.</span></a>
         <ul class="navbar-nav">
           <li><a href="dashboard.html" class="nav-link active">Кабинет</a></li>
-          <li><a href="ai_assistant.html" class="nav-link">AI Помощник</a></li>
+          <li><a href="ai_assistant.html" class="nav-link">Помощник</a></li>
           <li><a href="#" class="nav-link" id="logout-btn">Выйти</a></li>
         </ul>
         <button class="nav-toggle">☰</button>
@@ -26,6 +28,7 @@
   </header>
 
   <div class="container" style="padding-top: 2rem; padding-bottom: 3rem;">
+    <p class="demo-note">Демонстрационный кабинет: баланс и операции вымышлены, а созданные цели сохраняются только в этом браузере.</p>
     <!-- Welcome Section -->
     <div style="margin-bottom: 2rem;">
       <h1>Добро пожаловать, <span data-user-name>пользователь</span>!</h1>
@@ -36,7 +39,7 @@
     <div class="stat-card" style="margin-bottom: 2rem;">
       <div class="stat-label">Текущий баланс</div>
       <div class="stat-value" id="balance-amount">250 000 ₸</div>
-      <div class="stat-change">+15% за последний месяц</div>
+      <div class="stat-change">Демонстрационные данные</div>
     </div>
 
     <!-- Financial Goals Section -->
@@ -67,10 +70,9 @@
   </div>
 
   <script type="module">
-    import * as dashboard from '../js/dashboard.js';
-    import * as auth from '../js/auth.js';
-    import * as ui from '../js/ui.js';
-    import * as validator from '../js/validator.js';
+    import * as dashboard from './dashboard.js';
+    import * as auth from './auth.js';
+    import * as ui from './ui.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.init();
@@ -103,6 +105,7 @@
                   name="goal_title" 
                   class="form-input" 
                   placeholder="Например: Отпуск в Дубай"
+                  maxlength="60"
                   required
                 >
               </div>
@@ -161,3 +164,8 @@
   </script>
 </body>
 </html>
+
+
+
+
+

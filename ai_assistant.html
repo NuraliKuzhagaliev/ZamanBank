@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
 
   <style>
     .chat-container {
@@ -111,18 +112,19 @@
       color: var(--white);
     }
   </style>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <header class="site-header">
     <div class="container">
       <nav class="navbar">
-        <a href="index.html" class="navbar-brand">🏦 Zaman Bank</a>
+        <a href="index.html" class="navbar-brand"><span class="brand-mark">Z</span> zaman<span class="brand-dot">.</span></a>
         <ul class="navbar-nav">
           <li><a href="index.html" class="nav-link">Главная</a></li>
           <li><a href="about.html" class="nav-link">О нас</a></li>
-          <li><a href="services.html" class="nav-link">Услуги</a></li>
-          <li><a href="islamic_finance.html" class="nav-link">Исламский банкинг</a></li>
-          <li><a href="ai_assistant.html" class="nav-link active">AI Помощник</a></li>
+          <li><a href="services.html" class="nav-link">Возможности</a></li>
+          <li><a href="islamic_finance.html" class="nav-link">Исламские финансы</a></li>
+          <li><a href="ai_assistant.html" class="nav-link active">Помощник</a></li>
           <li><a href="contacts.html" class="nav-link">Контакты</a></li>
           <li data-auth-required style="display: none;"><a href="dashboard.html" class="btn btn-primary btn-sm">Личный кабинет</a></li>
         </ul>
@@ -132,22 +134,29 @@
   </header>
 
   <div class="container">
+    <p class="demo-note" style="margin-top:1.5rem">Это демонстрационный помощник с заранее подготовленными ответами, без реального AI и доступа к банковскому счёту.</p>
     <div class="chat-container">
       <div class="chat-header">
         <div>
-          <h2 style="margin: 0; color: var(--white);">AI Финансовый помощник</h2>
-          <p style="margin: 0; opacity: 0.9; font-size: var(--text-sm);">Спросите о балансе, целях или транзакциях</p>
+          <h2 style="margin: 0; color: var(--white);">Демо помощник</h2>
+          <p style="margin: 0; opacity: 0.9; font-size: var(--text-sm);">Спросите о балансе или финансовых целях</p>
         </div>
 
         <div class="voice-toggle">
           <label style="cursor: pointer;">
-            <input type="checkbox" id="voice-toggle" checked> 🔊 Голос
+            <input type="checkbox" id="voice-toggle"> 🔊 Голос
           </label>
         </div>
       </div>
 
       <div class="chat-messages" id="chat-messages">
         <!-- Messages will be added here dynamically -->
+      </div>
+
+      <div class="chat-suggestions" aria-label="Примеры вопросов">
+        <button type="button" data-question="Какой баланс?">Какой баланс?</button>
+        <button type="button" data-question="Помоги с целями">Помоги с целями</button>
+        <button type="button" data-question="Создай новую цель">Как создать цель?</button>
       </div>
 
       <div class="chat-input-area">
@@ -170,9 +179,9 @@
   </div>
 
   <script type="module">
-    import * as aiChat from 'ai_chat.js';
-    import * as auth from 'auth.js';
-    import * as ui from 'ui.js';
+    import * as aiChat from './ai_chat.js';
+    import * as auth from './auth.js';
+    import * as ui from './ui.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.init();
@@ -182,3 +191,9 @@
   </script> 
 </body>
 </html>
+
+
+
+
+
+

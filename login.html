@@ -9,13 +9,16 @@
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="project.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
   <div class="flex-center" style="min-height: 100vh; background: linear-gradient(135deg, var(--zaman-green) 0%, var(--primary) 100%); padding: 2rem;">
     <div class="card scale-in" style="max-width: 450px; width: 100%;">
       <div style="text-align: center; margin-bottom: 2rem;">
-        <h1 style="color: var(--primary); margin-bottom: 0.5rem;">🏦 Zaman Bank</h1>
-        <h2 style="font-size: var(--text-2xl);">Вход в систему</h2>
+        <h1 style="color: var(--primary); margin-bottom: 0.5rem;">zaman<span class="brand-dot">.</span></h1>
+        <h2 style="font-size: var(--text-2xl);">Вход в демо</h2>
+        <p class="demo-note">Это прототип без серверной авторизации. Используйте вымышленные email и пароль от 6 символов. Настоящие пароли не вводите.</p>
       </div>
 
       <form id="login-form">
@@ -39,6 +42,7 @@
             name="password" 
             class="form-input" 
             placeholder="••••••••"
+            minlength="6"
             required
           >
         </div>
@@ -63,16 +67,16 @@
   </div>
 
   <script type="module">
-    import * as auth from '../js/auth.js';
-    import * as validator from '../js/validator.js';
+    import * as auth from './auth.js';
+    import * as validator from './validator.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('login-form');
       form.addEventListener('submit', auth.handleLogin);
 
       // Real-time validation
-      const emailInput = form.email;
-      const passwordInput = form.password;
+      const emailInput = form.elements.email;
+      const passwordInput = form.elements.password;
 
       emailInput.addEventListener('blur', () => {
         const result = validator.validateEmail(emailInput.value);
@@ -95,3 +99,7 @@
   </script>
 </body>
 </html>
+
+
+
+

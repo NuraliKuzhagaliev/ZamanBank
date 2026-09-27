@@ -3,11 +3,11 @@
  * Handles AI assistant chat interface and voice interaction
  */
 
-import * as api from 'api.js';
-import * as speech from 'speech.js';
-import * as ui from 'ui.js';
-import * as auth from 'auth.js';
-import { toggleMicPulse } from 'animations.js';
+import * as api from './api.js';
+import * as speech from './speech.js';
+import * as ui from './ui.js';
+import * as auth from './auth.js';
+import { toggleMicPulse } from './animations.js';
 
 let messagesContainer;
 let messageInput;
@@ -51,6 +51,7 @@ export function init() {
   }
 
   if (voiceToggle) {
+    speech.setSpeechEnabled(voiceToggle.checked);
     voiceToggle.addEventListener('change', (e) => {
       speech.setSpeechEnabled(e.target.checked);
     });
@@ -58,6 +59,12 @@ export function init() {
 
   // Display welcome message
   displayWelcomeMessage();
+  document.querySelectorAll('[data-question]').forEach(button => {
+    button.addEventListener('click', () => {
+      messageInput.value = button.dataset.question;
+      handleSendMessage();
+    });
+  });
 }
 
 /**
@@ -68,7 +75,7 @@ function displayWelcomeMessage() {
   const name = user ? user.name : 'пользователь';
 
   addMessage(
-    `Здравствуйте, ${name}! Я ваш финансовый AI-помощник. Чем могу помочь сегодня?`,
+    `Здравствуйте, ${name}! Я демо помощник Zaman. Спросите о балансе или финансовых целях.`,
     'assistant'
   );
 }
@@ -80,6 +87,7 @@ async function handleSendMessage() {
   const message = messageInput.value.trim();
 
   if (!message) return;
+  sendButton.disabled = true;
 
   // Clear input
   messageInput.value = '';
@@ -114,6 +122,8 @@ async function handleSendMessage() {
     console.error('Failed to send message:', error);
     removeTypingIndicator(typingId);
     addMessage('Извините, произошла ошибка. Попробуйте снова.', 'assistant');
+  } finally {
+    sendButton.disabled = false;
   }
 }
 
@@ -155,9 +165,7 @@ function addMessage(text, type) {
   const messageEl = document.createElement('div');
   messageEl.className = `message message-${type} slide-up`;
   messageEl.innerHTML = `
-    <div class="message-content">
-      ${text}
-    </div>
+    <div class="message-content">${ui.escapeHtml(text)}</div>
     <div class="message-time">${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
   `;
 
@@ -241,3 +249,4 @@ async function handleSuggestedAction(action) {
 export default {
   init
 };
+
