@@ -14,6 +14,7 @@ let messageInput;
 let sendButton;
 let micButton;
 let voiceToggle;
+const chatHistory = [];
 
 /**
  * Initialize AI chat
@@ -57,6 +58,13 @@ export function init() {
     });
   }
 
+  const modeNote = document.getElementById('assistant-mode-note');
+  const modeTitle = document.getElementById('assistant-mode-title');
+  if (api.isAIEnabled()) {
+    if (modeNote) modeNote.textContent = 'Ответы создаёт ИИ Groq. Это учебный помощник без доступа к настоящим счетам. Не вводите пароли и реквизиты.';
+    if (modeTitle) modeTitle.textContent = 'AI помощник';
+  }
+
   // Display welcome message
   displayWelcomeMessage();
   document.querySelectorAll('[data-question]').forEach(button => {
@@ -75,7 +83,7 @@ function displayWelcomeMessage() {
   const name = user ? user.name : 'пользователь';
 
   addMessage(
-    `Здравствуйте, ${name}! Я демо помощник Zaman. Спросите о балансе или финансовых целях.`,
+    `Здравствуйте, ${name}! Я ${api.isAIEnabled() ? 'AI помощник' : 'демо помощник'} Zaman. Спросите о финансовых целях или возможностях демо.`,
     'assistant'
   );
 }
@@ -100,13 +108,15 @@ async function handleSendMessage() {
 
   try {
     const userId = auth.getCurrentUserId();
-    const response = await api.sendAIMessage(userId, message);
+    const response = await api.sendAIMessage(userId, message, chatHistory);
 
     // Remove typing indicator
     removeTypingIndicator(typingId);
 
     // Display assistant response
     addMessage(response.text, 'assistant');
+    chatHistory.push({ role: 'user', content: message }, { role: 'assistant', content: response.text });
+    if (chatHistory.length > 8) chatHistory.splice(0, chatHistory.length - 8);
 
     // Speak response if voice enabled
     if (speech.getSpeechEnabled()) {
@@ -121,7 +131,7 @@ async function handleSendMessage() {
   } catch (error) {
     console.error('Failed to send message:', error);
     removeTypingIndicator(typingId);
-    addMessage('Извините, произошла ошибка. Попробуйте снова.', 'assistant');
+    addMessage(error.message || 'Извините, произошла ошибка. Попробуйте снова.', 'assistant');
   } finally {
     sendButton.disabled = false;
   }

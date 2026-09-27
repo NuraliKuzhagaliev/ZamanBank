@@ -4,6 +4,8 @@
  * Supports mock mode for development without backend
  */
 
+import { CHAT_ENDPOINT } from './ai-config.js';
+
 // Configuration
 let BASE_URL = 'http://127.0.0.1:5000'; // Replace with actual backend URL
 let USE_MOCK = true; // Standalone hackathon demo; no banking backend is bundled.
@@ -100,6 +102,10 @@ export function isMockMode() {
   return USE_MOCK;
 }
 
+export function isAIEnabled() {
+  return Boolean(CHAT_ENDPOINT);
+}
+
 /**
  * Get authentication headers
  * @returns {Object} Headers object with authorization
@@ -193,7 +199,20 @@ export async function register(userData) {
  * @param {string} message 
  * @returns {Promise<{text: string, suggested_action?: Object}>}
  */
-export async function sendAIMessage(userId, message) {
+export async function sendAIMessage(userId, message, history = []) {
+  if (CHAT_ENDPOINT) {
+    const response = await fetch(CHAT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, history }),
+      signal: AbortSignal.timeout(25000)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.error || 'Помощник временно недоступен. Попробуйте позже.');
+    }
+    return data;
+  }
   return post('/ai/message', { user_id: userId, message });
 }
 
