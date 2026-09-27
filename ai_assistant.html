@@ -10,111 +10,10 @@
   <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="animations.css">
   <link rel="stylesheet" href="project.css">
-
-  <style>
-    .chat-container {
-      max-width: 900px;
-      margin: 2rem auto;
-      height: calc(100vh - 200px);
-      display: flex;
-      flex-direction: column;
-      background: var(--white);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      overflow: hidden;
-    }
-
-    .chat-header {
-      padding: var(--space-lg);
-      background: linear-gradient(135deg, var(--primary) 0%, var(--zaman-green) 100%);
-      color: var(--white);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: var(--space-xl);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-md);
-    }
-
-    .message {
-      max-width: 70%;
-      padding: var(--space-md) var(--space-lg);
-      border-radius: var(--radius-lg);
-      animation: slideUp 0.3s ease-out;
-    }
-
-    .message-user {
-      align-self: flex-end;
-      background-color: var(--primary);
-      color: var(--white);
-      border-bottom-right-radius: var(--radius-sm);
-    }
-
-    .message-assistant {
-      align-self: flex-start;
-      background-color: var(--surface);
-      color: var(--text-primary);
-      border-bottom-left-radius: var(--radius-sm);
-    }
-
-    .message-time {
-      font-size: var(--text-xs);
-      opacity: 0.7;
-      margin-top: var(--space-xs);
-    }
-
-    .chat-input-area {
-      padding: var(--space-lg);
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: var(--space-md);
-      align-items: flex-end;
-    }
-
-    .chat-input {
-      flex: 1;
-      min-height: 50px;
-      max-height: 150px;
-      resize: none;
-    }
-
-    .mic-button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: var(--primary);
-      color: var(--white);
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all var(--transition-base);
-    }
-
-    .mic-button:hover {
-      transform: scale(1.05);
-    }
-
-    .mic-button.listening {
-      background-color: var(--error);
-    }
-
-    .voice-toggle {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      color: var(--white);
-    }
-  </style>
+  <link rel="stylesheet" href="chat.css">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
-<body>
+<body class="chat-page">
   <header class="site-header">
     <div class="container">
       <nav class="navbar">
@@ -133,23 +32,26 @@
     </div>
   </header>
 
-  <div class="container">
+  <main class="container chat-page-main">
     <p class="demo-note" id="assistant-mode-note" style="margin-top:1.5rem">Это демонстрационный помощник с заранее подготовленными ответами, без реального AI и доступа к банковскому счёту.</p>
     <div class="chat-container">
       <div class="chat-header">
-        <div>
-          <h2 id="assistant-mode-title" style="margin: 0; color: var(--white);">Демо помощник</h2>
-          <p style="margin: 0; opacity: 0.9; font-size: var(--text-sm);">Спросите о балансе или финансовых целях</p>
+        <div class="chat-heading">
+          <span class="chat-eyebrow"><span class="chat-status-dot"></span> Zaman ассистент</span>
+          <h1 id="assistant-mode-title">Демо помощник</h1>
+          <p>Спросите о финансах или возможностях демо</p>
         </div>
-
-        <div class="voice-toggle">
-          <label style="cursor: pointer;">
-            <input type="checkbox" id="voice-toggle"> 🔊 Голос
-          </label>
-        </div>
+        <label class="voice-toggle" for="voice-toggle">
+          <span class="voice-toggle-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </span>
+          <span class="voice-toggle-copy"><strong>Озвучивать</strong><small>ответы помощника</small></span>
+          <input type="checkbox" id="voice-toggle" aria-label="Озвучивать ответы помощника">
+          <span class="voice-toggle-track" aria-hidden="true"></span>
+        </label>
       </div>
 
-      <div class="chat-messages" id="chat-messages">
+      <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
         <!-- Messages will be added here dynamically -->
       </div>
 
@@ -160,23 +62,31 @@
       </div>
 
       <div class="chat-input-area">
-        <textarea 
-          id="message-input" 
-          class="form-input chat-input" 
-          placeholder="Введите сообщение или используйте микрофон..."
-          rows="1"
-        ></textarea>
-
-        <button id="mic-button" class="mic-button" title="Голосовой ввод">
-          🎤
-        </button>
-
-        <button id="send-button" class="btn btn-primary" style="height: 50px;">
-          Отправить
-        </button>
+        <div class="chat-composer">
+          <textarea
+            id="message-input"
+            class="chat-input"
+            aria-label="Сообщение помощнику"
+            placeholder="Напишите сообщение..."
+            rows="1"
+            maxlength="1000"
+          ></textarea>
+          <div class="chat-composer-toolbar">
+            <div class="chat-composer-tools">
+              <button id="mic-button" class="mic-button" type="button" aria-label="Голосовой ввод" aria-pressed="false" title="Голосовой ввод">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 10.5v1.5a6.5 6.5 0 0 0 13 0v-1.5M12 18.5v3M8.5 21.5h7"/></svg>
+              </button>
+              <span class="chat-composer-hint">Enter — отправить <span>· Shift+Enter — новая строка</span></span>
+            </div>
+            <button id="send-button" class="chat-send-button" type="button" disabled>
+              <span>Отправить</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script type="module">
     import * as aiChat from './ai_chat.js';

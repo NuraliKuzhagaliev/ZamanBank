@@ -40,8 +40,9 @@ export function init() {
  * Start listening for voice input
  * @param {Function} onResult - Callback when speech is recognized
  * @param {Function} onError - Callback when error occurs
+ * @param {Function} onEnd - Callback when listening ends
  */
-export function startListening(onResult, onError) {
+export function startListening(onResult, onError, onEnd) {
   if (!recognition) {
     if (!init()) {
       if (onError) onError('Speech recognition not supported');
@@ -72,6 +73,7 @@ export function startListening(onResult, onError) {
 
   recognition.onend = () => {
     isListening = false;
+    if (onEnd) onEnd();
   };
 
   try {

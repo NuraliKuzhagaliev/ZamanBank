@@ -15,6 +15,22 @@ let sendButton;
 let micButton;
 let voiceToggle;
 const chatHistory = [];
+let isSending = false;
+
+function updateComposer() {
+  messageInput.style.height = 'auto';
+  messageInput.style.height = `${Math.min(messageInput.scrollHeight, 150)}px`;
+  messageInput.style.overflowY = messageInput.scrollHeight > 150 ? 'auto' : 'hidden';
+  sendButton.disabled = isSending || !messageInput.value.trim();
+}
+
+function setMicListening(listening) {
+  toggleMicPulse(micButton, listening);
+  micButton.classList.toggle('listening', listening);
+  micButton.setAttribute('aria-pressed', String(listening));
+  micButton.setAttribute('aria-label', listening ? 'Остановить запись' : 'Голосовой ввод');
+  micButton.title = listening ? 'Остановить запись' : 'Голосовой ввод';
+}
 
 /**
  * Initialize AI chat
@@ -33,9 +49,11 @@ export function init() {
 
   // Event listeners
   sendButton.addEventListener('click', handleSendMessage);
+  messageInput.addEventListener('input', updateComposer);
+  updateComposer();
 
-  messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  messageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -45,6 +63,7 @@ export function init() {
     if (!speech.isSupported()) {
       micButton.disabled = true;
       micButton.title = 'Распознавание речи не поддерживается';
+      micButton.setAttribute('aria-label', 'Распознавание речи не поддерживается');
     } else {
       speech.init();
       micButton.addEventListener('click', handleMicClick);
@@ -70,6 +89,7 @@ export function init() {
   document.querySelectorAll('[data-question]').forEach(button => {
     button.addEventListener('click', () => {
       messageInput.value = button.dataset.question;
+      updateComposer();
       handleSendMessage();
     });
   });
@@ -94,11 +114,13 @@ function displayWelcomeMessage() {
 async function handleSendMessage() {
   const message = messageInput.value.trim();
 
-  if (!message) return;
-  sendButton.disabled = true;
+  if (!message || isSending) return;
+  isSending = true;
+  updateComposer();
 
   // Clear input
   messageInput.value = '';
+  updateComposer();
 
   // Display user message
   addMessage(message, 'user');
@@ -133,7 +155,8 @@ async function handleSendMessage() {
     removeTypingIndicator(typingId);
     addMessage(error.message || 'Извините, произошла ошибка. Попробуйте снова.', 'assistant');
   } finally {
-    sendButton.disabled = false;
+    isSending = false;
+    updateComposer();
   }
 }
 
@@ -143,26 +166,24 @@ async function handleSendMessage() {
 function handleMicClick() {
   if (speech.getIsListening()) {
     speech.stopListening();
-    toggleMicPulse(micButton, false);
-    micButton.classList.remove('listening');
+    setMicListening(false);
   } else {
     speech.startListening(
       (transcript) => {
         messageInput.value = transcript;
-        toggleMicPulse(micButton, false);
-        micButton.classList.remove('listening');
+        updateComposer();
+        setMicListening(false);
         handleSendMessage();
       },
       (error) => {
         console.error('Speech recognition error:', error);
-        toggleMicPulse(micButton, false);
-        micButton.classList.remove('listening');
+        setMicListening(false);
         ui.showToast('Ошибка распознавания речи', 'error');
-      }
+      },
+      () => setMicListening(false)
     );
 
-    toggleMicPulse(micButton, true);
-    micButton.classList.add('listening');
+    if (speech.getIsListening()) setMicListening(true);
   }
 }
 
