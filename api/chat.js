@@ -82,7 +82,13 @@ export async function POST(request) {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ model: MODEL, messages, max_completion_tokens: 400 })
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        reasoning_effort: 'low',
+        include_reasoning: false,
+        max_completion_tokens: 600
+      })
     });
 
     if (!response.ok) {
