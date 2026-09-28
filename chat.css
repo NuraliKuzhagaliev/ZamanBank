@@ -1,6 +1,6 @@
 /* AI assistant: a focused, responsive conversation layout. */
 body.chat-page {
-  background: #f5f8f4;
+  background: radial-gradient(circle at 50% 10%, #f7faf6 0%, #eaf2eb 65%, #e2ece5 100%);
 }
 
 .chat-page-main {
@@ -22,10 +22,10 @@ body.chat-page .chat-container {
   min-height: 540px;
   margin: 0 auto;
   overflow: hidden;
-  border: 1px solid #dce7df;
+  border: 2px solid #9fbead;
   border-radius: 28px;
   background: #fff;
-  box-shadow: 0 24px 72px rgba(16, 67, 52, .1);
+  box-shadow: 0 0 0 7px rgba(72, 125, 98, .09), 0 30px 75px rgba(15, 65, 49, .2);
 }
 
 .chat-page .chat-header {
@@ -165,7 +165,7 @@ body.chat-page .chat-container {
   min-height: 0;
   padding: 1.5rem 1.8rem;
   overflow-y: auto;
-  background: #f3f7f3;
+  background: #eef5ef;
   border-top: 1px solid #e1ebe3;
   border-bottom: 1px solid #e1ebe3;
   scrollbar-color: #c7dcd2 transparent;
