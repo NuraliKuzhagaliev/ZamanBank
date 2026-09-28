@@ -2,11 +2,11 @@ import * as api from './api.js';
 
 const copy = {
   en: {
-    open: 'Open Zaman assistant',
+    open: 'Open Zaman Bank assistant',
     close: 'Close assistant',
-    title: 'Zaman assistant',
+    title: 'Zaman Bank assistant',
     subtitle: 'Ask about the demo',
-    welcome: 'Hi! Ask me about the demo balance, savings goals or Zaman features.',
+    welcome: 'Hi! Ask me about the demo balance, savings goals or Zaman Bank features.',
     placeholder: 'Write a message...',
     send: 'Send message',
     full: 'Open full chat',
@@ -14,11 +14,11 @@ const copy = {
     error: 'The assistant is temporarily unavailable. Please try again.'
   },
   ru: {
-    open: 'Открыть помощника Zaman',
+    open: 'Открыть помощника Zaman Bank',
     close: 'Закрыть помощника',
-    title: 'Помощник Zaman',
+    title: 'Помощник Zaman Bank',
     subtitle: 'Спросите о демо',
-    welcome: 'Привет! Спросите меня о демо балансе, целях или возможностях Zaman.',
+    welcome: 'Привет! Спросите меня о демо балансе, целях или возможностях Zaman Bank.',
     placeholder: 'Напишите сообщение...',
     send: 'Отправить сообщение',
     full: 'Открыть полный чат',
@@ -71,7 +71,7 @@ function init() {
         <div class="assistant-widget-bottom"><span data-widget-note></span><a href="ai_assistant.html" data-widget-full></a></div>
       </div>
     </section>
-    <button class="assistant-widget-launcher" type="button" aria-controls="assistant-widget-panel" aria-expanded="false" aria-label="Open Zaman assistant" title="Open Zaman assistant">
+    <button class="assistant-widget-launcher" type="button" aria-controls="assistant-widget-panel" aria-expanded="false" aria-label="Open Zaman Bank assistant" title="Open Zaman Bank assistant">
       ${chatIcon}<span class="assistant-widget-launcher-dot" aria-hidden="true"></span>
     </button>`;
   document.body.appendChild(root);

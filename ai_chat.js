@@ -114,9 +114,9 @@ function getWelcomeText() {
   const user = auth.getCurrentUser();
   const name = user ? user.name : (window.ZamanI18n?.getLanguage() === 'ru' ? 'пользователь' : 'there');
   if (window.ZamanI18n?.getLanguage() === 'ru') {
-    return `Здравствуйте, ${name}! Я ${api.isAIEnabled() ? 'AI помощник' : 'демо помощник'} Zaman. Спросите о финансовых целях или возможностях демо.`;
+    return `Здравствуйте, ${name}! Я ${api.isAIEnabled() ? 'AI помощник' : 'демо помощник'} Zaman Bank. Спросите о финансовых целях или возможностях демо.`;
   }
-  return `Hello, ${name}! I am the Zaman ${api.isAIEnabled() ? 'AI assistant' : 'demo assistant'}. Ask about financial goals or demo features.`;
+  return `Hello, ${name}! I am the Zaman Bank ${api.isAIEnabled() ? 'AI assistant' : 'demo assistant'}. Ask about financial goals or demo features.`;
 }
 
 /**
