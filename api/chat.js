@@ -1,5 +1,6 @@
 const SITE_ORIGINS = new Set([
   'https://nuralikuzhagaliev.github.io',
+  'https://zamanbank-ai.vercel.app',
   'http://127.0.0.1:4173',
   'http://localhost:4173'
 ]);
@@ -108,4 +109,3 @@ export async function POST(request) {
     return json({ error: 'Не удалось связаться с сервисом помощника.' }, 502, origin);
   }
 }
-

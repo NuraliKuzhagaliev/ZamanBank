@@ -27,11 +27,24 @@ test('allows the published site to send chat requests', async () => {
   }));
   assert.equal(response.status, 204);
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), origin);
+  const vercelOrigin = 'https://zamanbank-ai.vercel.app';
+  const vercelResponse = await OPTIONS(new Request('https://example.vercel.app/api/chat', {
+    method: 'OPTIONS', headers: { Origin: vercelOrigin }
+  }));
+  assert.equal(vercelResponse.status, 204);
+  assert.equal(vercelResponse.headers.get('Access-Control-Allow-Origin'), vercelOrigin);
 });
 
 test('rejects other origins and overlong input', async () => {
   assert.equal((await POST(request({ message: 'Привет' }, 'https://other.example'))).status, 403);
   assert.equal((await POST(request({ message: 'x'.repeat(1001) }))).status, 400);
+});
+
+test('accepts chat requests from the Vercel site', async () => {
+  globalThis.fetch = async () => Response.json({ choices: [{ message: { content: 'You can create goals.' } }] });
+  const response = await POST(request({ message: 'Help with goals', locale: 'en' }, 'https://zamanbank-ai.vercel.app'));
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://zamanbank-ai.vercel.app');
 });
 
 test('forwards only bounded conversation and returns the model text', async () => {
