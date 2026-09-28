@@ -165,7 +165,9 @@ body.chat-page .chat-container {
   min-height: 0;
   padding: 1.5rem 1.8rem;
   overflow-y: auto;
-  background: #fbfcfa;
+  background: #f3f7f3;
+  border-top: 1px solid #e1ebe3;
+  border-bottom: 1px solid #e1ebe3;
   scrollbar-color: #c7dcd2 transparent;
   scrollbar-width: thin;
 }
@@ -182,7 +184,8 @@ body.chat-page .chat-container {
 .chat-page .message-assistant {
   align-self: flex-start;
   border-bottom-left-radius: 6px;
-  background: #edf3ed;
+  border: 1px solid #dce9df;
+  background: #fff;
   color: #23433a;
 }
 
