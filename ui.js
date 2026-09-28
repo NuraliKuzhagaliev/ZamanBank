@@ -10,6 +10,7 @@
  * @param {number} duration - Duration in ms (default: 3000)
  */
 export function showToast(message, type = 'info', duration = 3000) {
+  message = window.ZamanI18n?.t(message) || message;
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
@@ -143,7 +144,7 @@ export function showLoading(container) {
  * @returns {string}
  */
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat('ru-RU', {
+  return new Intl.NumberFormat(window.ZamanI18n?.getLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
     style: 'decimal',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
@@ -157,7 +158,7 @@ export function formatCurrency(amount) {
  */
 export function formatDate(dateString) {
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat('ru-RU', {
+  return new Intl.DateTimeFormat(window.ZamanI18n?.getLanguage() === 'ru' ? 'ru-RU' : 'en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -177,11 +178,11 @@ export function initMobileMenu() {
 
   if (toggle && nav) {
     toggle.setAttribute('aria-expanded', 'false');
-    if (!toggle.getAttribute('aria-label')) toggle.setAttribute('aria-label', 'Открыть меню');
+    if (!toggle.getAttribute('aria-label')) toggle.setAttribute('aria-label', window.ZamanI18n?.t('Открыть меню') || 'Открыть меню');
     toggle.addEventListener('click', () => {
       const open = nav.classList.toggle('active');
       toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      toggle.setAttribute('aria-label', window.ZamanI18n?.t(open ? 'Закрыть меню' : 'Открыть меню') || (open ? 'Закрыть меню' : 'Открыть меню'));
     });
 
     // Close menu when clicking outside

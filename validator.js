@@ -117,7 +117,7 @@ export function showError(input, message) {
     input.parentElement.appendChild(errorEl);
   }
 
-  errorEl.textContent = message;
+  errorEl.textContent = window.ZamanI18n?.t(message) || message;
 }
 
 /**

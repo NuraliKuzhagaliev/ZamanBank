@@ -28,7 +28,7 @@ export function init() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
 
-  recognition.lang = 'ru-RU';
+  recognition.lang = window.ZamanI18n?.getLanguage() === 'ru' ? 'ru-RU' : 'en-US';
   recognition.continuous = false;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
@@ -55,6 +55,7 @@ export function startListening(onResult, onError, onEnd) {
   }
 
   isListening = true;
+  recognition.lang = window.ZamanI18n?.getLanguage() === 'ru' ? 'ru-RU' : 'en-US';
 
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
@@ -117,7 +118,7 @@ export function speak(text, onEnd) {
   synthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'ru-RU';
+  utterance.lang = window.ZamanI18n?.getLanguage() === 'ru' ? 'ru-RU' : 'en-US';
   utterance.rate = 1.0;
   utterance.pitch = 1.0;
   utterance.volume = 1.0;

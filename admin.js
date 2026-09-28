@@ -14,6 +14,7 @@ let currentFilters = {};
  */
 export async function init() {
   await loadLogs();
+  window.addEventListener('zaman-language-change', () => loadLogs(currentFilters));
 
   // Setup filter form
   const filterForm = document.getElementById('filter-form');

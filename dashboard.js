@@ -10,6 +10,7 @@ import * as validator from './validator.js';
 
 let goalsData = [];
 let transactionsData = [];
+const t = value => window.ZamanI18n?.t(value) || value;
 
 /**
  * Initialize dashboard
@@ -19,6 +20,7 @@ export async function init() {
 
   // Listen for refresh events
   window.addEventListener('dashboard-refresh', loadDashboard);
+  window.addEventListener('zaman-language-change', loadDashboard);
 
   // Setup create goal form
   document.addEventListener('submit', event => {
@@ -101,7 +103,7 @@ function renderGoalCard(goal) {
     <div class="card hover-lift">
       <div class="card-header">
         <h3 class="card-title">${ui.escapeHtml(goal.title)}</h3>
-        <span class="badge badge-primary">${daysLeft < 0 ? 'Срок прошёл' : `${daysLeft} дн.`}</span>
+        <span class="badge badge-primary">${daysLeft < 0 ? t('Срок прошёл') : `${daysLeft} ${window.ZamanI18n?.getLanguage() === 'ru' ? 'дн.' : 'days'}`}</span>
       </div>
       <div class="card-body">
         <div class="flex-between" style="margin-bottom: 0.5rem;">
@@ -118,7 +120,7 @@ function renderGoalCard(goal) {
         </div>
       </div>
       <div class="card-footer">
-        <small>Дедлайн: ${ui.formatDate(goal.deadline)}</small>
+        <small>${t('Дедлайн')}: ${ui.formatDate(goal.deadline)}</small>
       </div>
     </div>
   `;

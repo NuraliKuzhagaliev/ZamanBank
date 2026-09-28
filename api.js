@@ -204,7 +204,7 @@ export async function sendAIMessage(userId, message, history = []) {
     const response = await fetch(CHAT_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, history }),
+      body: JSON.stringify({ message, history, locale: window.ZamanI18n?.getLanguage() || 'en' }),
       signal: AbortSignal.timeout(25000)
     });
     const data = await response.json().catch(() => ({}));

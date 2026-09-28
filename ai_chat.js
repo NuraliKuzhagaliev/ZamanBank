@@ -16,6 +16,7 @@ let micButton;
 let voiceToggle;
 const chatHistory = [];
 let isSending = false;
+const t = text => window.ZamanI18n?.t(text) || text;
 
 function updateComposer() {
   messageInput.style.height = 'auto';
@@ -84,8 +85,14 @@ export function init() {
     if (modeTitle) modeTitle.textContent = 'AI помощник';
   }
 
+  window.ZamanI18n?.apply();
+
   // Display welcome message
   displayWelcomeMessage();
+  window.addEventListener('zaman-language-change', () => {
+    const welcome = document.querySelector('[data-welcome-message] .message-content');
+    if (welcome) welcome.textContent = getWelcomeText();
+  });
   document.querySelectorAll('[data-question]').forEach(button => {
     button.addEventListener('click', () => {
       messageInput.value = button.dataset.question;
@@ -99,13 +106,17 @@ export function init() {
  * Display welcome message
  */
 function displayWelcomeMessage() {
-  const user = auth.getCurrentUser();
-  const name = user ? user.name : 'пользователь';
+  const element = addMessage(getWelcomeText(), 'assistant');
+  element.dataset.welcomeMessage = '';
+}
 
-  addMessage(
-    `Здравствуйте, ${name}! Я ${api.isAIEnabled() ? 'AI помощник' : 'демо помощник'} Zaman. Спросите о финансовых целях или возможностях демо.`,
-    'assistant'
-  );
+function getWelcomeText() {
+  const user = auth.getCurrentUser();
+  const name = user ? user.name : (window.ZamanI18n?.getLanguage() === 'ru' ? 'пользователь' : 'there');
+  if (window.ZamanI18n?.getLanguage() === 'ru') {
+    return `Здравствуйте, ${name}! Я ${api.isAIEnabled() ? 'AI помощник' : 'демо помощник'} Zaman. Спросите о финансовых целях или возможностях демо.`;
+  }
+  return `Hello, ${name}! I am the Zaman ${api.isAIEnabled() ? 'AI assistant' : 'demo assistant'}. Ask about financial goals or demo features.`;
 }
 
 /**
@@ -153,7 +164,7 @@ async function handleSendMessage() {
   } catch (error) {
     console.error('Failed to send message:', error);
     removeTypingIndicator(typingId);
-    addMessage(error.message || 'Извините, произошла ошибка. Попробуйте снова.', 'assistant');
+    addMessage(t(error.message || 'Извините, произошла ошибка. Попробуйте снова.'), 'assistant');
   } finally {
     isSending = false;
     updateComposer();
@@ -178,7 +189,7 @@ function handleMicClick() {
       (error) => {
         console.error('Speech recognition error:', error);
         setMicListening(false);
-        ui.showToast('Ошибка распознавания речи', 'error');
+        ui.showToast(t('Ошибка распознавания речи'), 'error');
       },
       () => setMicListening(false)
     );
@@ -202,6 +213,7 @@ function addMessage(text, type) {
 
   messagesContainer.appendChild(messageEl);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  return messageEl;
 }
 
 /**

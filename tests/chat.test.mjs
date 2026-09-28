@@ -40,13 +40,25 @@ test('forwards only bounded conversation and returns the model text', async () =
     groqRequest = options;
     return Response.json({ choices: [{ message: { content: 'Это учебный помощник.' } }] });
   };
-  const response = await POST(request({ message: 'Привет', history: [{ role: 'user', content: 'Как дела?' }] }));
+  const response = await POST(request({ message: 'Hello', locale: 'en', history: [{ role: 'user', content: 'How are you?' }] }));
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), { text: 'Это учебный помощник.', suggested_action: null });
   const payload = JSON.parse(groqRequest.body);
   assert.equal(payload.model, 'openai/gpt-oss-20b');
-  assert.equal(payload.messages.at(-1).content, 'Привет');
-  assert.equal(payload.messages.at(-2).content, 'Как дела?');
+  assert.equal(payload.messages.at(-1).content, 'Hello');
+  assert.equal(payload.messages.at(-2).content, 'How are you?');
+  assert.match(payload.messages[0].content, /на английском языке/);
+});
+
+test('asks Groq to answer in Russian when Russian is selected', async () => {
+  let payload;
+  globalThis.fetch = async (_url, options) => {
+    payload = JSON.parse(options.body);
+    return Response.json({ choices: [{ message: { content: 'Привет!' } }] });
+  };
+  const response = await POST(request({ message: 'Привет', locale: 'ru' }));
+  assert.equal(response.status, 200);
+  assert.match(payload.messages[0].content, /по-русски/);
 });
 
 test('shows a friendly message when Groq quota is exhausted', async () => {
