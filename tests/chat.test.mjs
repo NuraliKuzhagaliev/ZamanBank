@@ -60,7 +60,8 @@ test('forwards only bounded conversation and returns the model text', async () =
   assert.equal(payload.model, 'openai/gpt-oss-20b');
   assert.equal(payload.messages.at(-1).content, 'Hello');
   assert.equal(payload.messages.at(-2).content, 'How are you?');
-  assert.match(payload.messages[0].content, /на английском языке/);
+  assert.match(payload.messages[0].content, /Reply in English/);
+  assert.match(payload.messages[0].content, /chat can only explain features/);
 });
 
 test('asks Groq to answer in Russian when Russian is selected', async () => {
@@ -71,7 +72,7 @@ test('asks Groq to answer in Russian when Russian is selected', async () => {
   };
   const response = await POST(request({ message: 'Привет', locale: 'ru' }));
   assert.equal(response.status, 200);
-  assert.match(payload.messages[0].content, /по-русски/);
+  assert.match(payload.messages[0].content, /Отвечай по-русски/);
 });
 
 test('shows a friendly message when Groq quota is exhausted', async () => {
