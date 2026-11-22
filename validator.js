@@ -3,6 +3,8 @@
  * Form validation utilities
  */
 
+import { isCalendarDate, localCalendarDate } from './calendar.js';
+
 /**
  * Validate email
  * @param {string} email 
@@ -63,7 +65,7 @@ export function validateRequired(value, fieldName = 'Поле') {
 export function validateNumber(value, min = null, max = null) {
   const num = parseFloat(value);
 
-  if (isNaN(num)) {
+  if (!Number.isFinite(num)) {
     return { ok: false, message: 'Введите корректное число' };
   }
 
@@ -83,19 +85,17 @@ export function validateNumber(value, min = null, max = null) {
  * @param {string} dateString 
  * @returns {{ok: boolean, message: string}}
  */
-export function validateDate(dateString) {
+export function validateDate(dateString, today = localCalendarDate()) {
   if (!dateString) {
     return { ok: false, message: 'Дата обязательна' };
   }
 
-  const date = new Date(dateString);
-
-  if (isNaN(date.getTime())) {
+  if (!isCalendarDate(dateString)) {
     return { ok: false, message: 'Неверный формат даты' };
   }
 
-  if (dateString < new Date().toISOString().slice(0, 10)) {
-    return { ok: false, message: 'Выберите будущую дату' };
+  if (dateString < today) {
+    return { ok: false, message: 'Выберите сегодняшнюю или будущую дату' };
   }
 
   return { ok: true, message: '' };

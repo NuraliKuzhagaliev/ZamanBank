@@ -1,4 +1,5 @@
 import * as api from './api.js';
+import { MAX_CHAT_HISTORY } from './chat-request.js';
 
 const copy = {
   en: {
@@ -11,6 +12,7 @@ const copy = {
     send: 'Send message',
     full: 'Open full chat',
     note: 'Demo assistant · Do not share passwords or card details.',
+    demo: 'Demo reply',
     error: 'The assistant is temporarily unavailable. Please try again.'
   },
   ru: {
@@ -23,6 +25,7 @@ const copy = {
     send: 'Отправить сообщение',
     full: 'Открыть полный чат',
     note: 'Демо помощник · Не сообщайте пароли и данные карты.',
+    demo: 'Демо-ответ',
     error: 'Помощник временно недоступен. Попробуйте ещё раз.'
   }
 };
@@ -140,9 +143,12 @@ function init() {
     try {
       const response = await api.sendAIMessage(null, message, history);
       pending.remove();
-      addMessage(list, response.text, 'assistant');
-      history.push({ role: 'user', content: message }, { role: 'assistant', content: response.text });
-      if (history.length > 8) history.splice(0, history.length - 8);
+      const reply = response.source === 'demo' ? `${copy[language()].demo}: ${response.text}` : response.text;
+      addMessage(list, reply, 'assistant');
+      if (response.source !== 'demo') {
+        history.push({ role: 'user', content: message }, { role: 'assistant', content: response.text });
+        if (history.length > MAX_CHAT_HISTORY) history.splice(0, 2);
+      }
     } catch {
       pending.remove();
       addMessage(list, copy[language()].error, 'assistant');

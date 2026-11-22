@@ -13,7 +13,11 @@ let isSpeechEnabled = true;
  * @returns {boolean}
  */
 export function isSupported() {
-  return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+  return typeof (window.SpeechRecognition || window.webkitSpeechRecognition) === 'function';
+}
+
+export function isSynthesisSupported() {
+  return Boolean(synthesis) && typeof window.SpeechSynthesisUtterance === 'function';
 }
 
 /**
@@ -110,7 +114,7 @@ export function getIsListening() {
  * @param {Function} onEnd - Callback when speech ends
  */
 export function speak(text, onEnd) {
-  if (!isSpeechEnabled || !synthesis) {
+  if (!isSpeechEnabled || !isSynthesisSupported()) {
     return;
   }
 

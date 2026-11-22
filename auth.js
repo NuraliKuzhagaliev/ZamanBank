@@ -5,6 +5,7 @@
 
 import * as api from './api.js';
 import { showToast } from './ui.js';
+import { validateForm, validateEmail, validatePassword, validateRequired } from './validator.js';
 
 /**
  * Initialize auth module
@@ -59,6 +60,7 @@ export async function handleLogin(event) {
   const email = form.elements.email.value.trim();
   const password = form.elements.password.value;
   const submitBtn = form.querySelector('button[type="submit"]');
+  if (!validateForm(form, { email: [validateEmail], password: [validatePassword] })) return;
 
   // Disable button during request
   submitBtn.disabled = true;
@@ -103,6 +105,11 @@ export async function handleRegister(event) {
   const password = form.elements.password.value;
   const confirmPassword = form.elements.confirm_password.value;
   const submitBtn = form.querySelector('button[type="submit"]');
+  if (!validateForm(form, {
+    name: [value => validateRequired(value, 'Имя')],
+    email: [validateEmail],
+    password: [validatePassword]
+  })) return;
 
   // Validate passwords match
   if (password !== confirmPassword) {

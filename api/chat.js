@@ -1,3 +1,5 @@
+import { MAX_CHAT_BYTES, MAX_CHAT_HISTORY, MAX_CHAT_MESSAGE } from '../chat-request.js';
+
 const SITE_ORIGINS = new Set([
   'https://nuralikuzhagaliev.github.io',
   'https://zamanbank-ai.vercel.app',
@@ -44,7 +46,7 @@ export async function POST(request) {
   if (!request.headers.get('content-type')?.startsWith('application/json')) {
     return json({ error: 'Ожидается JSON.' }, 415, origin);
   }
-  if (Number(request.headers.get('content-length')) > 8000) {
+  if (Number(request.headers.get('content-length')) > MAX_CHAT_BYTES) {
     return json({ error: 'Сообщение слишком длинное.' }, 413, origin);
   }
   if (!process.env.GROQ_API_KEY) {
@@ -54,20 +56,22 @@ export async function POST(request) {
   let body;
   try {
     const raw = await request.text();
-    if (raw.length > 8000) return json({ error: 'Сообщение слишком длинное.' }, 413, origin);
+    if (new TextEncoder().encode(raw).byteLength > MAX_CHAT_BYTES) {
+      return json({ error: 'Сообщение слишком длинное.' }, 413, origin);
+    }
     body = JSON.parse(raw);
   } catch {
     return json({ error: 'Неверный формат сообщения.' }, 400, origin);
   }
 
   const message = body?.message;
-  if (typeof message !== 'string' || !message.trim() || message.length > 1000) {
+  if (typeof message !== 'string' || !message.trim() || message.length > MAX_CHAT_MESSAGE) {
     return json({ error: 'Введите сообщение до 1000 символов.' }, 400, origin);
   }
 
-  const history = Array.isArray(body.history) ? body.history.slice(-8) : [];
+  const history = Array.isArray(body.history) ? body.history.slice(-MAX_CHAT_HISTORY) : [];
   if (history.some(item => !item || !['user', 'assistant'].includes(item.role)
-    || typeof item.content !== 'string' || item.content.length > 1000)) {
+    || typeof item.content !== 'string' || item.content.length > MAX_CHAT_MESSAGE)) {
     return json({ error: 'Неверный формат истории чата.' }, 400, origin);
   }
 
@@ -89,6 +93,7 @@ export async function POST(request) {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
+      signal: AbortSignal.timeout(12_000),
       body: JSON.stringify({
         model: MODEL,
         messages,
@@ -99,6 +104,7 @@ export async function POST(request) {
     });
 
     if (!response.ok) {
+      if (response.status !== 429) console.warn('Groq completion failed with HTTP status', response.status);
       if (response.status === 429) {
         return json({ error: 'Лимит бесплатных запросов временно исчерпан. Попробуйте позже.' }, 429, origin);
       }
@@ -106,7 +112,8 @@ export async function POST(request) {
     }
 
     const result = await response.json();
-    const text = result?.choices?.[0]?.message?.content?.trim();
+    const content = result?.choices?.[0]?.message?.content;
+    const text = typeof content === 'string' ? content.trim() : '';
     if (!text) return json({ error: 'Помощник не вернул ответ.' }, 502, origin);
     return json({ text, suggested_action: null }, 200, origin);
   } catch {

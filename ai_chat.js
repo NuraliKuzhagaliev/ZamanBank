@@ -8,6 +8,7 @@ import * as speech from './speech.js';
 import * as ui from './ui.js';
 import * as auth from './auth.js';
 import { toggleMicPulse } from './animations.js';
+import { MAX_CHAT_HISTORY, MAX_CHAT_MESSAGE } from './chat-request.js';
 
 let messagesContainer;
 let messageInput;
@@ -72,6 +73,11 @@ export function init() {
   }
 
   if (voiceToggle) {
+    if (!speech.isSynthesisSupported()) {
+      voiceToggle.checked = false;
+      voiceToggle.disabled = true;
+      voiceToggle.closest('label')?.setAttribute('title', 'Озвучивание не поддерживается');
+    }
     speech.setSpeechEnabled(voiceToggle.checked);
     voiceToggle.addEventListener('change', (e) => {
       speech.setSpeechEnabled(e.target.checked);
@@ -81,7 +87,7 @@ export function init() {
   const modeNote = document.getElementById('assistant-mode-note');
   const modeTitle = document.getElementById('assistant-mode-title');
   if (api.isAIEnabled()) {
-    if (modeNote) modeNote.textContent = 'Ответы создаёт ИИ Groq. Это учебный помощник без доступа к настоящим счетам. Не вводите пароли и реквизиты.';
+    if (modeNote) modeNote.textContent = 'Ответы создаёт ИИ Groq. При сбое доступны демо-ответы. Не вводите пароли и реквизиты.';
     if (modeTitle) modeTitle.textContent = 'AI помощник';
   }
 
@@ -112,7 +118,7 @@ function displayWelcomeMessage() {
 
 function getWelcomeText() {
   const user = auth.getCurrentUser();
-  const name = user ? user.name : (window.ZamanI18n?.getLanguage() === 'ru' ? 'пользователь' : 'there');
+  const name = user?.name?.trim() || (window.ZamanI18n?.getLanguage() === 'ru' ? 'пользователь' : 'there');
   if (window.ZamanI18n?.getLanguage() === 'ru') {
     return `Здравствуйте, ${name}! Я ${api.isAIEnabled() ? 'AI помощник' : 'демо помощник'} Zaman Bank. Спросите о финансовых целях или возможностях демо.`;
   }
@@ -147,9 +153,12 @@ async function handleSendMessage() {
     removeTypingIndicator(typingId);
 
     // Display assistant response
-    addMessage(response.text, 'assistant');
-    chatHistory.push({ role: 'user', content: message }, { role: 'assistant', content: response.text });
-    if (chatHistory.length > 8) chatHistory.splice(0, chatHistory.length - 8);
+    const reply = response.source === 'demo' ? `${t('Демо-ответ')}: ${response.text}` : response.text;
+    addMessage(reply, 'assistant');
+    if (response.source !== 'demo') {
+      chatHistory.push({ role: 'user', content: message }, { role: 'assistant', content: response.text });
+      if (chatHistory.length > MAX_CHAT_HISTORY) chatHistory.splice(0, 2);
+    }
 
     // Speak response if voice enabled
     if (speech.getSpeechEnabled()) {
@@ -181,10 +190,11 @@ function handleMicClick() {
   } else {
     speech.startListening(
       (transcript) => {
-        messageInput.value = transcript;
+        const draft = messageInput.value.trim();
+        messageInput.value = [draft, transcript.trim()].filter(Boolean).join(' ').slice(0, MAX_CHAT_MESSAGE);
         updateComposer();
         setMicListening(false);
-        handleSendMessage();
+        messageInput.focus();
       },
       (error) => {
         console.error('Speech recognition error:', error);

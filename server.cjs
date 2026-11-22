@@ -5,15 +5,19 @@ const path = require('node:path');
 const root = __dirname;
 const port = Number(process.env.PORT || 4173);
 const types = {
-  '.html': 'text/html',
-  '.css': 'text/css',
-  '.js': 'text/javascript',
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.ico': 'image/x-icon'
 };
 
 http.createServer(async (request, response) => {
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    response.writeHead(405, { Allow: 'GET, HEAD' }).end();
+    return;
+  }
   let pathname;
   try {
     pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
@@ -22,20 +26,18 @@ http.createServer(async (request, response) => {
     return;
   }
 
-  const target = path.resolve(root, '.' + pathname);
-  if (target !== root && !target.startsWith(root + path.sep)) {
-    response.writeHead(403).end('Forbidden');
-    return;
-  }
-
+  const filename = pathname === '/' ? 'index.html' : pathname.slice(1);
+  const contentType = types[path.extname(filename)];
   try {
-    const file = (await fs.stat(target)).isDirectory() ? path.join(target, 'index.html') : target;
+    if (!/^[a-z0-9_-]+\.[a-z0-9]+$/i.test(filename) || !contentType) throw new Error('Not a public asset');
+    const file = path.join(root, filename);
+    if (!(await fs.lstat(file)).isFile()) throw new Error('Not a regular file');
     const data = await fs.readFile(file);
-    response.writeHead(200, { 'Content-Type': (types[path.extname(file)] || 'application/octet-stream') + '; charset=utf-8' });
-    response.end(data);
+    response.writeHead(200, { 'Content-Type': contentType });
+    response.end(request.method === 'HEAD' ? undefined : data);
   } catch {
     response.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-    response.end(await fs.readFile(path.join(root, '404.html')));
+    response.end(request.method === 'HEAD' ? undefined : await fs.readFile(path.join(root, '404.html')));
   }
 }).listen(port, '127.0.0.1', () => {
   console.log(`Zaman demo: http://127.0.0.1:${port}`);

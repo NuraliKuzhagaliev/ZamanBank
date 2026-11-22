@@ -5,6 +5,9 @@
  */
 
 import { CHAT_ENDPOINT } from './ai-config.js';
+import { demoChatReply } from './chat-demo.js';
+import { MAX_CHAT_MESSAGE, serializeChatRequest } from './chat-request.js';
+import { localCalendarDate } from './calendar.js';
 
 // Configuration
 let BASE_URL = 'http://127.0.0.1:5000'; // Replace with actual backend URL
@@ -55,21 +58,6 @@ const MOCK_DATA = {
     { id: 4, date: '2026-09-18', description: 'Покупки', amount: -25000, type: 'debit' },
     { id: 5, date: '2026-09-15', description: 'Перевод с накоплений', amount: 50000, type: 'credit' }
   ],
-
-  aiResponses: {
-    'баланс': {
-      text: 'В демонстрационном кабинете баланс составляет 250 000 ₸. Это учебные данные, а не банковский счёт.',
-      suggested_action: null
-    },
-    'помоги с целями': {
-      text: 'Начните с финансовой подушки: определите комфортную сумму ежемесячного взноса. В этой демоверсии цели можно создать в кабинете.',
-      suggested_action: null
-    },
-    'создай новую цель': {
-      text: 'Откройте личный кабинет и нажмите «Создать цель». Цель сохранится в этом браузере.',
-      suggested_action: null
-    }
-  },
 
   logs: [
     { id: 1, user_id: 1, action_type: 'update_goal_contribution', timestamp: '2026-09-24 14:30:00', status: 'completed' },
@@ -200,19 +188,30 @@ export async function register(userData) {
  * @returns {Promise<{text: string, suggested_action?: Object}>}
  */
 export async function sendAIMessage(userId, message, history = []) {
+  const locale = window.ZamanI18n?.getLanguage() === 'ru' ? 'ru' : 'en';
+  if (!message.trim() || message.length > MAX_CHAT_MESSAGE) {
+    throw new Error('Введите сообщение до 1000 символов.');
+  }
   if (CHAT_ENDPOINT) {
-    const response = await fetch(CHAT_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, history, locale: window.ZamanI18n?.getLanguage() || 'en' }),
-      signal: AbortSignal.timeout(25000)
-    });
+    let response;
+    try {
+      response = await fetch(CHAT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: serializeChatRequest(message, history, locale),
+        signal: AbortSignal.timeout(15000)
+      });
+    } catch {
+      return demoChatReply(message, locale);
+    }
     const data = await response.json().catch(() => ({}));
+    if (response.status === 429 || response.status >= 500) return demoChatReply(message, locale);
     if (!response.ok) {
       throw new Error(data.error || 'Помощник временно недоступен. Попробуйте позже.');
     }
-    return data;
+    return typeof data.text === 'string' && data.text.trim() ? data : demoChatReply(message, locale);
   }
+  if (USE_MOCK) return demoChatReply(message, locale);
   return post('/ai/message', { user_id: userId, message });
 }
 
@@ -311,18 +310,6 @@ function mockPost(path, body) {
           access_token: MOCK_DATA.token,
           user
         });
-      } else if (path.includes('/ai/message')) {
-        const message = body.message.toLowerCase();
-        let response = { text: 'Это демонстрационный помощник. Я могу рассказать о балансе и целях. Реальные операции здесь недоступны.', suggested_action: null };
-
-        for (const [key, value] of Object.entries(MOCK_DATA.aiResponses)) {
-          if (message.includes(key.toLowerCase())) {
-            response = value;
-            break;
-          }
-        }
-
-        resolve(response);
       } else if (path.includes('/ai/execute')) {
         resolve({
           success: true,
@@ -334,7 +321,7 @@ function mockPost(path, body) {
           id: Math.max(0, ...goals.map(goal => goal.id)) + 1,
           ...body,
           current_amount: 0,
-          created_at: new Date().toISOString().split('T')[0]
+          created_at: localCalendarDate()
         };
         goals.push(newGoal);
         localStorage.setItem(demoGoalsKey(), JSON.stringify(goals));

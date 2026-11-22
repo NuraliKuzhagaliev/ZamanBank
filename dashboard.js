@@ -7,6 +7,7 @@ import * as api from './api.js';
 import * as auth from './auth.js';
 import * as ui from './ui.js';
 import * as validator from './validator.js';
+import { calendarDaysUntil, localCalendarDate } from './calendar.js';
 
 let goalsData = [];
 let transactionsData = [];
@@ -97,7 +98,7 @@ async function loadGoals(userId) {
  */
 function renderGoalCard(goal) {
   const progress = Math.min(Math.max(Math.round((goal.current_amount / goal.target_amount) * 100), 0), 100);
-  const daysLeft = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+  const daysLeft = calendarDaysUntil(goal.deadline);
 
   return `
     <div class="card hover-lift">
@@ -200,12 +201,13 @@ async function handleCreateGoal(event) {
   const title = form.elements.goal_title.value.trim();
   const targetAmount = parseFloat(form.elements.target_amount.value);
   const deadline = form.elements.deadline.value;
+  const today = localCalendarDate();
 
   // Validate
   const isValid = validator.validateForm(form, {
     goal_title: [(val) => validator.validateRequired(val, 'Название цели')],
     target_amount: [(val) => validator.validateNumber(val, 1000)],
-    deadline: [(val) => validator.validateDate(val)]
+    deadline: [(val) => validator.validateDate(val, today)]
   });
 
   if (!isValid) return;

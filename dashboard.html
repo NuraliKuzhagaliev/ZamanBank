@@ -73,6 +73,7 @@
   <script type="module">
     import * as dashboard from './dashboard.js';
     import * as auth from './auth.js';
+    import { localCalendarDate } from './calendar.js';
     import * as ui from './ui.js';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -131,6 +132,7 @@
                   id="deadline" 
                   name="deadline" 
                   class="form-input" 
+                  min="${localCalendarDate()}"
                   required
                 >
               </div>
